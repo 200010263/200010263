@@ -44,4 +44,15 @@
     <insert id="insertStudent">
         insert into student values(#{id},#{name},#{email},#{age})
     </insert>
+
+<!--    多个参数，使用@param命名-->
+    <select id="selectStudentByMultiParam" resultType="com.bwna.domian.Student">
+        select id,name,email,age from Student where id=#{id} or name=#{name}
+    </select>
+
+    <!--    多个参数，使用student对象传参数,以对象属性为值传入实参-->
+    <select id="selectStudentByStudent" resultType="com.bwna.domian.Student">
+        select id,name,email,age from Student where age=#{age} or name=#{name}
+    </select>
+
 </mapper>
