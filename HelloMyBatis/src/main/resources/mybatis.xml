@@ -2,50 +2,70 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
-<!--
-    这个是mybatis的主配置文件，自己命名：主要定义了数据库的配置信息，sql映射文件的位置
--->
 
-<!--  根标签，表示配置信息-->
+<!--这个是mybatis的主配置文件，自己命名：主要定义了数据库的配置信息，sql映射文件的位置-->
+
+<!--根标签，表示配置信息-->
 <configuration>
 
-<!--    环境配置：数据库的连接信息
-        default：必须和某个environment的id值一样，表示访问哪个数据库
--->
+    <!--指定properties文件的位置，从类路径开始找文件,即从resources目录下开始找
+        注意：mybatis.xml这个主配置文件有读取顺序，properties标签需要写在根标签下的第一行，否则易报错-->
+    <properties resource="jdbc.properties"/>
+
     <!--settings：控制mybatis全局行为-->
     <settings>
         <!--设置mybatis输出日志-->
         <setting name="logImpl" value="STDOUT_LOGGING" />
     </settings>
 
+<!--    pagehelper插件的配置-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+    </plugins>
+
+<!--    给需要用的类配置别名，包名下的类名就是别名，不过建议用全限定名称-->
+<!--    <typeAliases>-->
+<!--        <package name="com.bwna.domian.Student"/>-->
+<!--    </typeAliases>-->
+
+    <!--环境配置：数据库的连接信息
+        default：必须和某个environment的id值一样，表示访问哪个数据库-->
     <environments default="development">
 
-<!--     environment：一个数据库的配置信息
-         id：自定义名称，表示环境名称
-         -->
+        <!--environment：一个数据库的配置信息
+         id：自定义名称，表示环境名称-->
         <environment id="development">
-<!--            transactionManager：mybatis的事务类型
-                type：JDBC
--->
+
+            <!--transactionManager：mybatis提交事务,回滚事务的方式
+                type：事务的处理类型
+                JDBC：表示mybatis底层用jdbc中的Connection对象的
+                MANAGED：把mybatis的事务处理委托给其他容器（spring等）-->
             <transactionManager type="JDBC"/>
-<!--            datasource：表示数据源
-                type：数据源类型，pooled表示连接池
--->
+
+            <!--datasource：表示数据源，实现了javax.sql.DataSource接口的都是数据源
+                type：数据源类型，pooled表示连接池-->
             <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/ssm?useSSL=false&amp;serverTimezone=UTC"/>
-                <property name="username" value="root"/>
-                <property name="password" value="123456"/>
+
+                <!--一般配置写在resources目录下的properties文件中，与mybatis配置文件分开-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+
             </dataSource>
+
         </environment>
 
     </environments>
 
-<!--    表示sql映射文件的位置
-        一个mapper指定一个文件的位置，从类路径（target/classes）开始
--->
+    <!--表示sql映射文件的位置
+    一个mapper指定一个映射文件的位置，从类路径（target/classes）开始-->
     <mappers>
-        <mapper resource="com/bwna/Dao/StudentDao.xml"/>
+<!--        第一种方式：指定多个mapper-->
+        <mapper resource="com/bwna/dao/StudentDao.xml"/>
+
+<!--        第二种方式：指定包名,一次把包下的mapper文件传给mybatis-->
+<!--        <package name="com.bwna.dao"/>-->
     </mappers>
 
 </configuration>

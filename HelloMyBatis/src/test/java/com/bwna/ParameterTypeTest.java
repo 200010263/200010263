@@ -1,6 +1,6 @@
 package com.bwna;
 
-import com.bwna.Dao.StudentDao;
+import com.bwna.dao.StudentDao;
 import com.bwna.domian.Student;
 import com.bwna.utils.MyBatisUtils;
 import org.apache.ibatis.session.SqlSession;

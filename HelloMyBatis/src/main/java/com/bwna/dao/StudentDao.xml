@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    sql映射文件：写SQL语句，mybatis会执行这些语句
+
+    1，指定约束文件
+    <!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+        mybatis-3-mapper.dtd：约束文件的名称
+        约束文件的作用：检查文件中出现的标签，符合mybatis规则
+
+    2，mapper：当前文件的根标签
+       namespcae：命名空间，规定为使用的dao接口的全限定名称
+
+    3，标签
+       select
+       update
+       insert
+       delete
+-->
+<mapper namespace="com.bwna.dao.StudentDao">
+
+    <sql id="studentSql">select id,name,age,email from Student</sql>
+
+<!--    id:要执行的sql语句的唯一标识，规定为接口中的方法名称
+        resultType：表示返回的结果类型，执行sql语句后得到resultType的java对象类型
+                    规定为实体类的全限定名称
+        parameterType:dao接口中方法参数的类型，值是java数据类型的全限定名称或者mybatis定义的别名
+                例如：parameterType="java.lang.Integer"
+                      parameterType="int"
+                 并非强制要写，一般不写
+-->
+    <select id="selectStudents" resultType="com.bwna.domian.Student">
+        <include refid="studentSql"/> order by id
+    </select>
+
+    <select id="selectStudentById" parameterType="java.lang.Integer" resultType="com.bwna.domian.Student">
+        select id,name,email,age from Student where id=#{id}
+    </select>
+
+    <insert id="insertStudent">
+        insert into student values(#{id},#{name},#{email},#{age})
+    </insert>
+
+<!--    多个参数，使用@param命名-->
+    <select id="selectStudentByMultiParam" resultType="com.bwna.domian.Student">
+        select id,name,email,age from Student where id=#{id} or name=#{name}
+    </select>
+
+    <!--    多个参数，使用student对象传参数,以对象属性为值传入实参-->
+    <select id="selectStudentByStudent" resultType="com.bwna.domian.Student">
+        select id,name,email,age from Student where age=#{age} or name=#{name}
+    </select>
+
+<!--    一个map只能返回一行数据，建议用list-->
+    <select id="selectStudentByMap" resultType="java.util.HashMap">
+        select id,name from student where id=#{id}
+    </select>
+
+    <!--    使用resultMap来处理结果集-->
+<!--    先定义resultMap，在select标签中用resultMap来引用定义的resultMap
+        id：自定义的名称，表示自己定义的一个resultMap
+        type：java类型的全限定的名称
+-->
+    <resultMap id="studentMap" type="com.bwna.domian.Student">
+<!--    定义列名与java对象属性的对应关系
+        主键列用id标签,非主键列用result标签
+        column：列名
+        property：java类型的属性
+-->
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="email" property="email"/>
+    </resultMap>
+
+    <select id="selectAllStudent"  resultMap="studentMap">
+        select id,name,age,email from Student
+    </select>
+
+    <!--    用起别名的方式解决列名与属性名不同的问题
+            <select id="selectAllStudent"  resultType="com.bwna.domian.Student">-->
+<!--        select id stuid,name stuname,age stuage,email stuemail from Student-->
+<!--    </select>-->
+
+<!--    模糊查询-->
+    <select id="selectLikeStudent" resultType="com.bwna.domian.Student">
+        select id,name,email,age from Student where name like #{name}
+    </select>
+
+<!--    动态if的sql语句-->
+    <select id="selectDongIf" resultType="com.bwna.domian.Student">
+        select id,name,age,email from student
+        where 1=1
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+        <if test="age > 18">
+            or age = #{age}
+        </if>
+    </select>
+
+    <!--    动态where的sql语句-->
+    <select id="selectDongWhere" resultType="com.bwna.domian.Student">
+        select id,name,age,email from student
+        <where>
+            <if test="name != null and name != ''">
+                 name = #{name}
+            </if>
+            <if test="age > 15">
+                 or age = #{age}
+            </if>
+        </where>
+    </select>
+
+<!--    分页查询-->
+    <select id="selectAllStudentsPageHelper" resultType="com.bwna.domian.Student">
+        select * from Student
+    </select>
+
+</mapper>

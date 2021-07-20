@@ -19,7 +19,7 @@ public class InsertTest {
         //5,获取SqlSession对象
         SqlSession sqlSession = MyBatisUtils.getSqlSession();
         //6，指定要执行的sql语句的标识：sql映射文件中的namespace + "." + 标签的id
-        String sqlId = "com.bwna.Dao.StudentDao" + "." + "selectStudents";
+        String sqlId = "com.bwna.dao.StudentDao" + "." + "selectStudents";
         //7，执行sql语句，通过sqlId找到语句
         List<Student> studentList = sqlSession.selectList(sqlId);
         //8，输出结果
@@ -43,10 +43,10 @@ public class InsertTest {
         //5,获取SqlSession对象
         SqlSession sqlSession = factory.openSession();
         //6，指定要执行的sql语句的标识：sql映射文件中的namespace + "." + 标签的id
-        String sqlId = "com.bwna.Dao.StudentDao" + "." + "insertStudent";
+        String sqlId = "com.bwna.dao.StudentDao" + "." + "insertStudent";
         //7，执行sql语句，通过sqlId找到语句
         //这里需要构造一个学生对象
-        Student student = new Student(1003,"王老五","wlu@qq.com",11);
+        Student student = new Student(1005,"狄九","wdj@qq.com",100);
         int num = sqlSession.insert(sqlId,student);
         //这里注意：mybatis默认不提交事务，需要手动提交，insert，update，delete操作都要
         sqlSession.commit();

@@ -38,6 +38,14 @@
       <version>8.0.15</version>
     </dependency>
 
+<!--    pageHelper分页插件-->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>5.1.10</version>
+    </dependency>
+
+
   </dependencies>
 
 
