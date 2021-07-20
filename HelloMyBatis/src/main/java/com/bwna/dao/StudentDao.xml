@@ -25,6 +25,7 @@
 -->
 <mapper namespace="com.bwna.dao.StudentDao">
 
+<!--    这是-->
     <sql id="studentSql">select id,name,age,email from Student</sql>
 
 <!--    id:要执行的sql语句的唯一标识，规定为接口中的方法名称
@@ -35,6 +36,8 @@
                       parameterType="int"
                  并非强制要写，一般不写
 -->
+
+<!--    用了动态sql的片段代码-->
     <select id="selectStudents" resultType="com.bwna.domian.Student">
         <include refid="studentSql"/> order by id
     </select>
